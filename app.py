@@ -136,7 +136,15 @@ with tab1:
         else:
             with st.spinner("Generating Journey..."):
                 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-                p = f"Resume: {st.session_state.resume_text}\nTarget: {st.session_state.role}\nGoal: {st.session_state.goal}\nGenerate a 6-month roadmap with phases, modules, and projects."
+                p = (f"Act as an expert career coach. Resume: {st.session_state.resume_text}\n"
+                     f"Target Role: {st.session_state.role}\n"
+                     f"Career Goal: {st.session_state.goal}\n\n"
+                     "Generate an ultra-high-value 6-month learning roadmap. Each phase MUST include:\n"
+                     "1. **Direct Resources**: Provide exact YouTube playlist names/links, specific Coursera/edX course names, and official documentation links (e.g., Python.org, React.dev).\n"
+                     "2. **Specific Tooling**: Explicitly list all tools, libraries, and frameworks to master.\n"
+                     "3. **Milestone Project**: Describe a unique, portfolio-worthy project with a clear blueprint and tech stack.\n"
+                     "4. **Actionable Tasks**: Weekly breakdown with focus areas.\n\n"
+                     "Format with clear ## Phase headers and bold resource sections.")
                 st.session_state.roadmap = generate_roadmap(p)
                 rid = roadmap_id(st.session_state.resume_text, st.session_state.goal, st.session_state.role)
                 if not any(x['id'] == rid for x in st.session_state.roadmaps_db):
@@ -211,10 +219,56 @@ with tab2:
                 ans = m.generate_content(f"Context: {st.session_state.roadmap}\nQ: {q}")
                 st.info(ans.text)
 
-            # Export (Restored)
-            col1, col2 = st.columns(2)
-            col1.download_button("📥 Export as TXT", st.session_state.roadmap, "roadmap.txt", use_container_width=True)
-            col2.download_button("💾 Backup as JSON", json.dumps({"role": st.session_state.role, "roadmap": st.session_state.roadmap}), "roadmap.json", use_container_width=True)
+            # Export (Restored & Enhanced)
+            st.markdown("### 📥 Save Your Guide")
+            
+            def create_pdf(text, role):
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+                    c = canvas.Canvas(tmp.name, pagesize=letter)
+                    width, height = letter
+                    c.setFont("Helvetica-Bold", 18)
+                    c.setFillColor(HexColor("#6366f1"))
+                    c.drawString(inch, height - inch, f"SkillUp: {role} Roadmap")
+                    c.setFont("Helvetica", 10)
+                    c.setFillColor(HexColor("#64748b"))
+                    c.drawString(inch, height - 1.3*inch, f"Generated on {datetime.now().strftime('%Y-%m-%d')}")
+                    c.line(inch, height - 1.4*inch, width - inch, height - 1.4*inch)
+                    
+                    text_obj = c.beginText(inch, height - 1.8*inch)
+                    text_obj.setFont("Helvetica", 10)
+                    text_obj.setFillColor(HexColor("#1e293b"))
+                    
+                    lines = text.split('\n')
+                    for line in lines:
+                        if text_obj.getY() < inch: # Page break
+                            c.drawText(text_obj)
+                            c.showPage()
+                            text_obj = c.beginText(inch, height - inch)
+                            text_obj.setFont("Helvetica", 10)
+                        
+                        # Handle very long lines (basic wrapping)
+                        if len(line) > 90:
+                            parts = [line[i:i+90] for i in range(0, len(line), 90)]
+                            for p in parts: text_obj.textLine(p)
+                        else:
+                            text_obj.textLine(line)
+                    
+                    c.drawText(text_obj)
+                    c.save()
+                    return tmp.name
+
+            col1, col2, col3 = st.columns(3)
+            
+            # PDF Generation Button
+            if col1.button("📄 Download PDF Guide", use_container_width=True):
+                with st.spinner("Preparing PDF..."):
+                    pdf_path = create_pdf(st.session_state.roadmap, st.session_state.role)
+                    with open(pdf_path, "rb") as f:
+                        st.download_button("Click to Save PDF", f, file_name=f"SkillUp_{st.session_state.role}_Roadmap.pdf", mime="application/pdf", use_container_width=True)
+                    os.remove(pdf_path)
+
+            col2.download_button("📥 Export as TXT", st.session_state.roadmap, "roadmap.txt", use_container_width=True)
+            col3.download_button("💾 Backup as JSON", json.dumps({"role": st.session_state.role, "roadmap": st.session_state.roadmap}), "roadmap.json", use_container_width=True)
 
     else:
         st.markdown("<div class='empty-state'><p>Start by uploading your resume!</p></div>", unsafe_allow_html=True)
