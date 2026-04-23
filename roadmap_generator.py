@@ -40,7 +40,7 @@ def generate_roadmap(prompt: str, max_retries: int = 3) -> str:
     
     while retry_count < max_retries:
         try:
-            model = genai.GenerativeModel("gemini-2.0-flash-lite")
+            model = genai.GenerativeModel("gemini-2.5-flash")
             response = model.generate_content(prompt)
             
             if not response or not response.text:

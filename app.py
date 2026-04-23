@@ -151,7 +151,7 @@ with tab1:
         if st.button("Simulate Interview Fit"):
             if st.session_state.resume_text and jd:
                 with st.spinner("Simulating..."):
-                    m = genai.GenerativeModel("gemini-2.0-flash-lite")
+                    m = genai.GenerativeModel("gemini-2.5-flash")
                     res = m.generate_content(f"Match resume to JD:\nResume: {st.session_state.resume_text}\nJD: {jd}")
                     st.markdown(res.text)
 
@@ -207,7 +207,7 @@ with tab2:
             st.markdown("### ❓ Journey Q&A")
             q = st.text_input("Ask about this path...")
             if st.button("Ask SkillUp AI"):
-                m = genai.GenerativeModel("gemini-2.0-flash-lite")
+                m = genai.GenerativeModel("gemini-2.5-flash")
                 ans = m.generate_content(f"Context: {st.session_state.roadmap}\nQ: {q}")
                 st.info(ans.text)
 
