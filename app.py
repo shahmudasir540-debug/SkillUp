@@ -108,7 +108,23 @@ with tab1:
     with col1:
         st.markdown("### 🎯 Career Targets")
         st.session_state.goal = st.text_input("What is your dream role?", placeholder="e.g., Lead AI Researcher", value=st.session_state.goal)
-        roles = ["Select a tech role", "AI Engineer", "Frontend Developer", "Backend Developer", "Full Stack Developer", "Product Manager", "Data Analyst", "Cybersecurity Expert", "DevOps Engineer", "UI/UX Designer", "Other"]
+        roles = [
+            "Select a target role",
+            # -- IT & Development --
+            "AI Engineer", "Full Stack Developer", "Data Scientist", "DevOps Engineer", "Cloud Architect",
+            # -- BPO & Customer Operations --
+            "Customer Support Associate (Domestic)", "Customer Support Associate (International)",
+            "Soft Skills Trainer", "Process Trainer", "Quality Analyst (QA)", "Quality Manager",
+            "Workforce Management (WFM) Specialist", "MIS Executive", "MIS Manager",
+            "Team Leader (Operations)", "Operations Manager", "Senior Operations Manager",
+            "Director (BPO/ITES)", "VP (Operations)",
+            # -- ITES, Adtech & Edtech --
+            "Instructional Designer", "Learning Experience Manager", "Academic Consultant",
+            "Campaign Manager (Adtech)", "Performance Marketer", "SEO/SEM Specialist",
+            "Ad Operations Specialist",
+            # -- Other --
+            "Other"
+        ]
         st.session_state.role = st.selectbox("Industry Focus", roles, index=roles.index(st.session_state.role) if st.session_state.role in roles else 0)
 
     with col2:
