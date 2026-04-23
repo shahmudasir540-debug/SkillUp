@@ -1,0 +1,9 @@
+streamlit
+google-generativeai
+python-dotenv
+reportlab
+plotly
+pandas
+PyPDF2
+hashlib
+datetime
