@@ -118,7 +118,14 @@ with tab1:
             with st.spinner("Analyzing..."):
                 if up.type == "application/pdf":
                     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as t:
-                        t.write(up.read()); st.session_state.resume_text = parse_resume(t.name); os.remove(t.name)
+                        t.write(up.read())
+                        temp_path = t.name
+                    # File is now closed, safe to parse
+                    st.session_state.resume_text = parse_resume(temp_path)
+                    # parse_resume handles its own cleanup, but we'll ensure it's gone
+                    if os.path.exists(temp_path):
+                        try: os.remove(temp_path)
+                        except: pass
                 else:
                     st.session_state.resume_text = parse_linkedin_json(json.load(up))
                 st.success("✅ Resume Analyzed")
