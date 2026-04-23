@@ -20,10 +20,8 @@ def get_smart_gap_analysis(resume_text: str, target_role: str, user_goal: str = 
     Raises:
         SmartGapAnalysisError: If the analysis fails.
     """
-    if not st.session_state.get("gemini_api_key"):
-        raise SmartGapAnalysisError("Gemini API key not configured in session state.")
-
-    genai.configure(api_key=st.session_state.gemini_api_key)
+    import os
+    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
     model = genai.GenerativeModel("gemini-2.0-flash-lite") # Or your preferred model
 
     # Step 1: Define what an ideal candidate for the target_role looks like (implicitly or explicitly)

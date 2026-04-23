@@ -59,10 +59,11 @@ if "role" not in st.session_state:
     st.session_state.role = "Select a tech role"
 if "is_paid" not in st.session_state:
     st.session_state.is_paid = False
-if "gemini_api_key" not in st.session_state:
-    st.session_state.gemini_api_key = os.getenv("GEMINI_API_KEY", "")
 if "first_visit" not in st.session_state:
     st.session_state.first_visit = True
+
+# Ensure API Key is configured globally if present
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 # --- Header ---
 st.markdown("""
@@ -77,30 +78,19 @@ if st.session_state.first_visit:
     st.info("""
     ### 🚀 Welcome to SkillUp!
     Your all-in-one platform to bridge the gap between your skills and your dream career.
-    1. **⚙️ Config:** Enter your API key in the sidebar.
-    2. **📄 Resume:** Upload your CV and set your target.
-    3. **⚡ Transform:** Generate your roadmap and take control of your learning.
+    1. **📄 Resume:** Upload your CV and set your target.
+    2. **⚡ Transform:** Generate your roadmap and take control of your learning.
     """)
     if st.button("Get Started", use_container_width=True):
         st.session_state.first_visit = False
         st.rerun()
 
-# --- Sidebar (Settings & Recent Roadmaps - Restored) ---
+# --- Sidebar (Recent Roadmaps - Restored) ---
 with st.sidebar:
-    st.header("⚙️ Configuration")
-    if not st.session_state.gemini_api_key:
-        api_input = st.text_input("Gemini API Key", type="password")
-        if st.button("Save Key"):
-            st.session_state.gemini_api_key = api_input
-            st.rerun()
-    else:
-        st.success("✅ AI Engine Connected")
-        if st.button("🔄 Change API Key"):
-            st.session_state.gemini_api_key = ""
-            st.rerun()
-
-    st.markdown("---")
-    st.header("🗂️ Recent Journeys")
+    st.markdown("### 🗂️ Recent Journeys")
+    if not st.session_state.roadmaps_db:
+        st.caption("No recent journeys found.")
+    
     for r in st.session_state.roadmaps_db[:5]:
         if st.button(f"📌 {r['role']}\n{r['goal'][:25]}...", key=f"sb_{r['id']}", use_container_width=True):
             st.session_state.roadmap = r["roadmap"]
@@ -138,7 +128,7 @@ with tab1:
         elif st.session_state.role == "Select a tech role": st.warning("Please select a role")
         else:
             with st.spinner("Generating Journey..."):
-                genai.configure(api_key=st.session_state.gemini_api_key)
+                genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
                 p = f"Resume: {st.session_state.resume_text}\nTarget: {st.session_state.role}\nGoal: {st.session_state.goal}\nGenerate a 6-month roadmap with phases, modules, and projects."
                 st.session_state.roadmap = generate_roadmap(p)
                 rid = roadmap_id(st.session_state.resume_text, st.session_state.goal, st.session_state.role)
