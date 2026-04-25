@@ -53,75 +53,62 @@ if "role" not in st.session_state: st.session_state.role = ""
 if "is_paid" not in st.session_state: st.session_state.is_paid = False
 if "current_step" not in st.session_state: st.session_state.current_step = "onboarding"
 
-# --- Visual Component: Header ---
-st.markdown("""
-<div class="app-header">
-    <h1 class="app-title">Skill<span class="title-accent">Up</span></h1>
-    <p class="app-subtitle">Precision Career Navigation</p>
-</div>
-""", unsafe_allow_html=True)
+# --- Visual Header ---
+st.markdown("""<div class="app-header"><h1 class="app-title">Skill<span class="title-accent">Up</span></h1><p class="app-subtitle">The Final Career Navigation System</p></div>""", unsafe_allow_html=True)
 
-# ============================================================
-# RENDERING ENGINE: TO-CLEAN-UI
-# ============================================================
+# --- Role Library (Massive Expansion) ---
+ROLE_LIBRARY = [
+    "--- BPO & BPS ---",
+    "Customer Support Associate (Domestic)", "Customer Support Associate (International)", "Voice Process Executive", "Non-Voice / Backoffice Specialist",
+    "Customer Success Manager", "Technical Support Engineer", "Operations Team Leader", "Operations Manager", "Senior Operations Manager",
+    "Quality Analyst (QA)", "Quality Manager", "Trainer (Process/Soft Skills)", "Training Manager",
+    "Workforce Management (WFM) Analyst", "WFM Manager", "MIS Executive", "MIS Manager", "RTA (Real Time Analyst)",
+    "Director of Operations", "VP Operations",
+    "--- IT, DATA & DEV ---",
+    "Data Analyst", "Senior Data Analyst", "Data Scientist", "Data Engineer", "AI/ML Engineer", "Business Intelligence (BI) Developer",
+    "Backend Developer", "Frontend Developer", "Full Stack Developer", "Mobile App Developer", "DevOps Engineer", "Cloud Solutions Architect",
+    "Cybersecurity Specialist", "IT Support Specialist", "System Administrator", "Database Administrator",
+    "--- SALES & MARKETING ---",
+    "Business Development Associate", "Business Development Manager", "Sales Executive", "Corporate Sales Head",
+    "Performance Marketing Specialist", "Digital Marketing Manager", "SEO/SEM Specialist", "Content Strategist", "Social Media Manager",
+    "Product Marketing Manager", "Ad Operations Specialist", "Campaign Manager",
+    "--- EDTECH & DESIGN ---",
+    "Instructional Designer", "Curriculum Developer", "Academic Consultant", "Edtech Product Manager", "Learning Experience Designer",
+    "UI/UX Designer", "Product Designer", "Graphic Designer", "Video Editor",
+    "--- MGMT & OTHER ---",
+    "Project Manager", "Program Manager", "Product Manager", "HR Generalist", "Recruitment Specialist", "Financial Analyst", "Other"
+]
+
+# --- Rendering ---
 def render_clean_phase(phase_text, number):
-    # Regex to clean out AI "markdown mess" and extract pillars
     try:
         title_match = re.search(r"Phase \d+: (.*)", phase_text)
         title = title_match.group(1) if title_match else f"Mastery Phase {number}"
-        
-        # Clean the text of excessive ** or *
         clean_text = phase_text.replace("**", "").replace("*", "")
-        
         watch = re.search(r"Watch: (.*)", clean_text)
         study = re.search(r"Study: (.*)", clean_text)
         build = re.search(r"Build: (.*)", clean_text)
-        
-        st.markdown(f"""
-        <div class="phase-container">
-            <div class="phase-sidebar">
-                <div class="phase-badge">{number}</div>
-                <div class="phase-line"></div>
-            </div>
-            <div class="phase-content-card">
-                <h3 class="phase-title">{title.strip()}</h3>
-                <div class="resource-row">
-                    <div class="resource-pill watch-pill">📺 Watch: {watch.group(1).strip() if watch else "Curated Playlist"}</div>
-                    <div class="resource-pill study-pill">🎓 Study: {study.group(1).strip() if study else "Mastery Guide"}</div>
-                </div>
-                <div class="project-box">
-                    <div class="project-label">🛠️ CAPSTONE PROJECT</div>
-                    <p class="project-desc">{build.group(1).strip() if build else "Portfolio-worthy Application"}</p>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    except:
-        st.markdown(f"<div class='phase-card'>{phase_text}</div>", unsafe_allow_html=True)
+        st.markdown(f"""<div class="phase-container"><div class="phase-sidebar"><div class="phase-badge">{number}</div><div class="phase-line"></div></div><div class="phase-content-card"><h3 class="phase-title">{title.strip()}</h3><div class="resource-row"><div class="resource-pill watch-pill">📺 Watch: {watch.group(1).strip() if watch else "Curated Playlist"}</div><div class="resource-pill study-pill">🎓 Study: {study.group(1).strip() if study else "Mastery Guide"}</div></div><div class="project-box"><div class="project-label">🛠️ CAPSTONE PROJECT</div><p class="project-desc">{build.group(1).strip() if build else "Portfolio Application"}</p></div></div></div>""", unsafe_allow_html=True)
+    except: st.markdown(f"<div class='phase-card'>{phase_text}</div>", unsafe_allow_html=True)
 
-# ============================================================
-# FLOW LOGIC
-# ============================================================
 if st.session_state.current_step == "onboarding":
-    st.markdown("""
-    <div class="hero-section">
-        <h1>The Direct Path to Your Dream Role</h1>
-        <p>No fluff. No information overload. Just a personalized blueprint for your next move.</p>
-        <button class="hero-btn" onclick="document.getElementById('start-btn').click()">🚀 Take the First Step</button>
-    </div>
-    """, unsafe_allow_html=True)
-    if st.button("Start Now", key="start-btn"):
-        st.session_state.current_step = "selection"; st.rerun()
+    st.markdown("""<div class="hero-section"><h1>Your Personalized 6-Month Escape Plan</h1><p>SkillUp builds an expert-curated upskilling roadmap to get you ready for your next promotion or career switch. Stop searching, start mastering.</p></div>""", unsafe_allow_html=True)
+    c1, c2, c3 = st.columns([1,2,1])
+    with col2 := c2:
+        if st.button("🚀 Begin My Transformation", use_container_width=True, type="primary"):
+            st.session_state.current_step = "selection"; st.rerun()
 
 elif st.session_state.current_step == "selection":
-    st.markdown("<h2 style='text-align:center;'>📄 Building Your Profile</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center;'>📄 Set Your Destination</h2>", unsafe_allow_html=True)
     with st.container(border=True):
         c1, c2 = st.columns(2)
         with c1:
-            st.session_state.role = st.selectbox("Your Target Role", ["", "Data Analyst", "Operations Manager", "Full Stack Dev", "WFM Specialist", "Quality Analyst", "UI Designer", "Other"])
-            st.session_state.goal = st.text_input("Immediate Goal", placeholder="e.g., Switch from Support to Analytics")
+            st.session_state.role = st.selectbox("Search & Select Your Dream Role", options=[""] + ROLE_LIBRARY)
+            if st.session_state.role == "Other": st.session_state.role = st.text_input("Enter Custom Role")
+            st.session_state.goal = st.text_input("What is your Immediate Goal?", placeholder="e.g. Move from Domestic to International BPO")
         with c2:
-            f = st.file_uploader("Upload CV (PDF/JSON)")
+            st.caption("Upload your current resume/profile detail")
+            f = st.file_uploader("Upload Profile (PDF/JSON)")
             if f:
                 with st.spinner("Analyzing..."):
                     if f.type == "application/pdf":
@@ -132,7 +119,7 @@ elif st.session_state.current_step == "selection":
                     else: st.session_state.resume_text = json.dumps(json.load(f))
                     st.success("✅ Profile Verified")
                     
-    if st.button("📦 Generate My Guide", use_container_width=True, type="primary"):
+    if st.button("🗺️ Create My Mastery Roadmap", use_container_width=True, type="primary"):
         if st.session_state.resume_text and st.session_state.role:
             with st.spinner("Curating Your Path..."):
                 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
@@ -145,51 +132,26 @@ elif st.session_state.current_step == "selection":
                 st.session_state.current_step = "journey"; st.rerun()
 
 elif st.session_state.current_step == "journey":
-    t1, t2 = st.tabs(["🗺️ Your Roadmap", "🔬 Profile Gap"])
+    t1, t2 = st.tabs(["🗺️ Your Roadmap", "🔬 Deep Analysis"])
     with t1:
         if st.session_state.roadmap:
-            # --- Progress Tracking (Dopamine Hits) ---
-            parts = re.split(r"Phase \d+:", st.session_state.roadmap)
-            total_phases = len(parts) - 1
-            
-            if "completed_phases" not in st.session_state:
-                st.session_state.completed_phases = {}
-
-            # Calculated Progress
-            completed_count = sum(1 for v in st.session_state.completed_phases.values() if v)
-            progress_pct = (completed_count / total_phases) if total_phases > 0 else 0
-            
-            st.markdown(f"### 📈 Your Mastery Progress: {int(progress_pct * 100)}%")
-            st.progress(progress_pct)
-            
-            st.markdown("---")
-            st.markdown("### Your Custom Career Path")
-            
-            show_size = total_phases if st.session_state.is_paid else 1
-            for i, p_text in enumerate(parts[1:show_size+1]):
-                # Render the UI card
+            parts = re.split(r"Phase \d+:", st.session_state.roadmap); total = len(parts)-1
+            if "completed_phases" not in st.session_state: st.session_state.completed_phases = {}
+            done = sum(1 for v in st.session_state.completed_phases.values() if v)
+            prog = (done / total) if total > 0 else 0
+            st.markdown(f"### 📈 Your Mastery: {int(prog * 100)}%"); st.progress(prog); st.markdown("---")
+            show = total if st.session_state.is_paid else 1
+            for i, p_text in enumerate(parts[1:show+1]):
                 render_clean_phase(p_text, i+1)
-                
-                # Interactivty for dopamine hit
-                col_btn, _ = st.columns([1, 2])
-                with col_btn:
-                    cb_key = f"phase_cb_{i+1}"
-                    st.session_state.completed_phases[cb_key] = st.checkbox(f"✅ Mark Phase {i+1} as Mastered", key=cb_key)
-            
+                cb_key = f"pc_{i+1}"
+                st.session_state.completed_phases[cb_key] = st.checkbox(f"✅ Mark Phase {i+1} as Done", key=cb_key)
             if not st.session_state.is_paid:
-                st.markdown("""
-                <div class="locked-box">
-                    <h3>🔒 Complete Your 6-Month Journey</h3>
-                    <p>Unlock all 6 phases, specific resource links, and your personalized Mastery PDF.</p>
-                </div>
-                """, unsafe_allow_html=True)
-                if st.button("Unlock Now - ₹299", use_container_width=True, type="primary"):
+                st.markdown("<div class='locked-box'><h3>🔒 Access the Full 6-Month Plan</h3><p>Unlock all phases and the complete Resource Bible for ₹299.</p></div>", unsafe_allow_html=True)
+                if st.button("💰 Upgrade to Pro", use_container_width=True, type="primary"):
                     st.session_state.is_paid = True; st.balloons(); st.rerun()
             else:
-                st.success("💎 Full Access Enabled")
-                # PDF & Resources below...
-                if st.button("📥 Download PDF Bible"):
-                    st.info("Preparing Professional PDF...")
+                st.success("💎 Pro Membership Active")
+                if st.button("📥 Download My PDF Bible", use_container_width=True): st.info("Generating...")
 
-if st.button("🔄 Start New Search", use_container_width=True):
-    st.session_state.current_step = "onboarding"; st.session_state.roadmap = ""; st.rerun()
+if st.button("🔄 Reset & Start New", use_container_width=True):
+    st.session_state.current_step = "onboarding"; st.session_state.roadmap = ""; st.session_state.completed_phases = {}; st.rerun()
