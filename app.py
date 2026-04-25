@@ -147,7 +147,29 @@ elif st.session_state.current_step == "selection":
                         continue
                 
                 if not success:
-                    st.error("All AI models are currently busy or reached their quota. Please try again in 1 minute.")
+                    st.info("💡 API Quota reached. Entering 'Demo Mode' to allow UI testing.")
+                    st.session_state.roadmap = """
+Phase 1: Foundation & Data Sense
+Watch: https://www.youtube.com/results?search_query=data+analyst+basics
+Study: Google Data Analytics Certification - Course 1
+Build: Analyze a public kaggle dataset using Excel & basic SQL.
+
+Phase 2: Technical Deep Dive - SQL & Python
+Watch: https://www.youtube.com/results?search_query=sql+for+data+analytics
+Study: W3Schools SQL Guide & Python for Data Science
+Build: Create a relational database for a sample BPO workflow.
+
+Phase 3: Visual Storytelling
+Watch: https://www.youtube.com/results?search_query=tableau+masterclass
+Study: Tableau/PowerBI Official Desktop Guide
+Build: Create an executive dashboard for BPO performance metrics.
+
+## RESOURCE BIBLE
+YouTube: https://youtube.com/c/freecodecamp
+Courses: https://coursera.org
+Docs: https://sqlzoo.net
+"""
+                    st.session_state.current_step = "journey"; st.rerun()
                 else:
                     st.session_state.current_step = "journey"; st.rerun()
 
