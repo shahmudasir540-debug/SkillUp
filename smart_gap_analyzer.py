@@ -22,8 +22,8 @@ def get_smart_gap_analysis(resume_text: str, target_role: str, user_goal: str = 
     """
     import os
     genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    # Robust Fallback System
-    models_to_try = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-1.0-pro", "gemini-2.0-flash"]
+    # High-Velocity Fallback System
+    models_to_try = ["gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-2.0-flash-exp", "gemini-1.0-pro"]
     for model_name in models_to_try:
         try:
             model = genai.GenerativeModel(model_name)
