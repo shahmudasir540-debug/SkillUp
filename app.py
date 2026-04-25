@@ -123,7 +123,7 @@ elif st.session_state.current_step == "selection":
         if st.session_state.resume_text and st.session_state.role:
             with st.spinner("Curating Your Path..."):
                 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-                m = genai.GenerativeModel("gemini-2.0-flash")
+                m = genai.GenerativeModel("gemini-1.5-flash")
                 p = (f"User Resume: {st.session_state.resume_text[:1500]}\nTarget: {st.session_state.role}\n"
                      "Task: Create a 6-phase learning roadmap. \n"
                      "Format strictly per phase: Phase X: [Name]\nWatch: [Resource Name/Link]\nStudy: [Course/Guide]\nBuild: [Project Description]\n"
