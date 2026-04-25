@@ -148,13 +148,33 @@ elif st.session_state.current_step == "journey":
     t1, t2 = st.tabs(["🗺️ Your Roadmap", "🔬 Profile Gap"])
     with t1:
         if st.session_state.roadmap:
-            # Clean rendering
+            # --- Progress Tracking (Dopamine Hits) ---
             parts = re.split(r"Phase \d+:", st.session_state.roadmap)
+            total_phases = len(parts) - 1
+            
+            if "completed_phases" not in st.session_state:
+                st.session_state.completed_phases = {}
+
+            # Calculated Progress
+            completed_count = sum(1 for v in st.session_state.completed_phases.values() if v)
+            progress_pct = (completed_count / total_phases) if total_phases > 0 else 0
+            
+            st.markdown(f"### 📈 Your Mastery Progress: {int(progress_pct * 100)}%")
+            st.progress(progress_pct)
+            
+            st.markdown("---")
             st.markdown("### Your Custom Career Path")
             
-            show_size = len(parts)-1 if st.session_state.is_paid else 1
+            show_size = total_phases if st.session_state.is_paid else 1
             for i, p_text in enumerate(parts[1:show_size+1]):
+                # Render the UI card
                 render_clean_phase(p_text, i+1)
+                
+                # Interactivty for dopamine hit
+                col_btn, _ = st.columns([1, 2])
+                with col_btn:
+                    cb_key = f"phase_cb_{i+1}"
+                    st.session_state.completed_phases[cb_key] = st.checkbox(f"✅ Mark Phase {i+1} as Mastered", key=cb_key)
             
             if not st.session_state.is_paid:
                 st.markdown("""
