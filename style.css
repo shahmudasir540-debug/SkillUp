@@ -1,5 +1,5 @@
 /* ============================================================
-   SkillUp — Structured UI Styling
+   SkillUp — Gamified Mastery UI
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@300;400;500;700&display=swap');
@@ -15,7 +15,11 @@
 
 .stApp { background: var(--bg-primary); color: #f1f5f9; font-family: 'Inter', sans-serif; }
 
-/* Timeline Containers */
+/* Timeline & Progress */
+.stProgress > div > div > div {
+    background-image: linear-gradient(to right, var(--primary), var(--accent-green)) !important;
+}
+
 .phase-container {
     display: flex;
     gap: 2rem;
@@ -39,6 +43,7 @@
     justify-content: center;
     font-weight: 800;
     z-index: 2;
+    box-shadow: 0 0 15px var(--primary);
 }
 
 .phase-line {
@@ -52,46 +57,64 @@
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 16px;
-    padding: 1.5rem;
+    padding: 2rem;
     flex-grow: 1;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    transition: all 0.3s ease;
+}
+
+.phase-content-card:hover {
+    border-color: var(--primary);
+    background: rgba(255,255,255,0.05);
 }
 
 .phase-title {
     font-family: 'Outfit', sans-serif;
-    font-size: 1.25rem;
+    font-size: 1.4rem;
     margin-top: 0;
     color: var(--accent-blue);
+    letter-spacing: -0.01em;
 }
 
 /* Resource Pills */
-.resource-row { display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+.resource-row { display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
 .resource-pill {
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1.2rem;
     border-radius: 50px;
     font-size: 0.85rem;
-    font-weight: 500;
+    font-weight: 600;
+    border: 1px solid transparent;
 }
-.watch-pill { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #fca5a5; }
-.study-pill { background: rgba(59, 130, 246, 0.1); border: 1px solid #3b82f6; color: #93c5fd; }
+.watch-pill { background: rgba(239, 68, 68, 0.1); border-color: #ef4444; color: #fca5a5; }
+.study-pill { background: rgba(59, 130, 246, 0.1); border-color: #3b82f6; color: #93c5fd; }
 
 /* Project Box */
 .project-box {
-    margin-top: 1.5rem;
-    padding: 1rem;
-    background: rgba(16, 185, 129, 0.05);
-    border-left: 3px solid var(--accent-green);
-    border-radius: 8px;
-}
-.project-label { font-size: 0.75rem; font-weight: 800; color: var(--accent-green); letter-spacing: 0.1em; }
-.project-desc { margin-top: 0.5rem; font-size: 0.95rem; line-height: 1.5; }
-
-/* Locked Box */
-.locked-box {
-    background: linear-gradient(180deg, transparent, rgba(99, 102, 241, 0.1));
-    border: 1px dashed var(--primary);
-    padding: 3rem;
-    text-align: center;
-    border-radius: 16px;
     margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(16, 185, 129, 0.05);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-left: 4px solid var(--accent-green);
+    border-radius: 12px;
 }
+.project-label { font-size: 0.7rem; font-weight: 800; color: var(--accent-green); letter-spacing: 0.15em; text-transform: uppercase; }
+.project-desc { margin-top: 0.8rem; font-size: 1rem; line-height: 1.6; color: #cbd5e1; }
+
+/* Locked Experience */
+.locked-box {
+    background: rgba(10, 10, 34, 0.8);
+    border: 2px dashed var(--primary);
+    padding: 4rem 2rem;
+    text-align: center;
+    border-radius: 20px;
+}
+
+/* Hero Branding */
+.hero-section { text-align: center; padding: 5rem 2rem; }
+.hero-section h1 { font-size: 3.5rem !important; font-family: 'Outfit', sans-serif; font-weight: 800 !important; }
+.hero-btn { 
+    background: var(--primary); color: white; border: none; padding: 1rem 3rem; 
+    border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 1.1rem;
+    transition: transform 0.2s;
+}
+.hero-btn:hover { transform: scale(1.05); background: var(--primary-bright); }
