@@ -121,15 +121,29 @@ elif st.session_state.current_step == "selection":
                     
     if st.button("🗺️ Create My Mastery Roadmap", use_container_width=True, type="primary"):
         if st.session_state.resume_text and st.session_state.role:
-            with st.spinner("Curating Your Path..."):
+            with st.spinner("Curating Your Path (searching for available AI engine)..."):
                 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-                m = genai.GenerativeModel("gemini-1.5-flash")
-                p = (f"User Resume: {st.session_state.resume_text[:1500]}\nTarget: {st.session_state.role}\n"
-                     "Task: Create a 6-phase learning roadmap. \n"
-                     "Format strictly per phase: Phase X: [Name]\nWatch: [Resource Name/Link]\nStudy: [Course/Guide]\nBuild: [Project Description]\n"
-                     "DO NOT use markdown bolding (**) in the content parts. Keep it plain text for parsing.")
-                st.session_state.roadmap = m.generate_content(p).text
-                st.session_state.current_step = "journey"; st.rerun()
+                
+                # Robust Fallback System
+                models_to_try = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-1.0-pro", "gemini-2.0-flash"]
+                success = False
+                for model_name in models_to_try:
+                    try:
+                        m = genai.GenerativeModel(model_name)
+                        p = (f"User Resume: {st.session_state.resume_text[:1500]}\nTarget: {st.session_state.role}\n"
+                             "Task: Create a 6-phase learning roadmap. \n"
+                             "Format strictly per phase: Phase X: [Name]\nWatch: [Resource Name/Link]\nStudy: [Course/Guide]\nBuild: [Project Description]\n"
+                             "DO NOT use markdown bolding (**) in the content parts. Keep it plain text for parsing.")
+                        st.session_state.roadmap = m.generate_content(p).text
+                        success = True
+                        break
+                    except Exception as e:
+                        continue
+                
+                if not success:
+                    st.error("All AI models are currently busy or reached their quota. Please try again in 1 minute.")
+                else:
+                    st.session_state.current_step = "journey"; st.rerun()
 
 elif st.session_state.current_step == "journey":
     t1, t2 = st.tabs(["🗺️ Your Roadmap", "🔬 Deep Analysis"])

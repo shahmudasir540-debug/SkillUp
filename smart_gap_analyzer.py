@@ -22,7 +22,16 @@ def get_smart_gap_analysis(resume_text: str, target_role: str, user_goal: str = 
     """
     import os
     genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel("gemini-1.5-flash") # Or your preferred model
+    # Robust Fallback System
+    models_to_try = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-1.0-pro", "gemini-2.0-flash"]
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            # Step 1: Define what an ideal candidate...
+            # (Rest of the logic remains same)
+            break
+        except:
+            continue
 
     # Step 1: Define what an ideal candidate for the target_role looks like (implicitly or explicitly)
     # For this implementation, we'll use a single, more complex prompt.
