@@ -93,8 +93,8 @@ def render_clean_phase(phase_text, number):
 
 if st.session_state.current_step == "onboarding":
     st.markdown("""<div class="hero-section"><h1>Your Personalized 6-Month Escape Plan</h1><p>SkillUp builds an expert-curated upskilling roadmap to get you ready for your next promotion or career switch. Stop searching, start mastering.</p></div>""", unsafe_allow_html=True)
-    c1, c2, c3 = st.columns([1,2,1])
-    with col2 := c2:
+    col_c1, col_c2, col_c3 = st.columns([1,2,1])
+    with col_c2:
         if st.button("🚀 Begin My Transformation", use_container_width=True, type="primary"):
             st.session_state.current_step = "selection"; st.rerun()
 
