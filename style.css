@@ -1,5 +1,5 @@
 /* ============================================================
-   SkillUp — Gamified Mastery UI
+   SkillUp — AI-Augmented Mastery UI
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@300;400;500;700&display=swap');
@@ -9,112 +9,78 @@
     --primary: #6366f1;
     --accent-blue: #38bdf8;
     --accent-green: #10b981;
+    --ai-purple: #a855f7;
     --card-bg: rgba(255, 255, 255, 0.03);
     --border: rgba(255, 255, 255, 0.08);
 }
 
 .stApp { background: var(--bg-primary); color: #f1f5f9; font-family: 'Inter', sans-serif; }
 
-/* Timeline & Progress */
-.stProgress > div > div > div {
-    background-image: linear-gradient(to right, var(--primary), var(--accent-green)) !important;
-}
-
-.phase-container {
-    display: flex;
-    gap: 2rem;
-    margin-bottom: 2rem;
-}
-
-.phase-sidebar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.phase-badge {
-    background: var(--primary);
-    color: white;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 800;
-    z-index: 2;
-    box-shadow: 0 0 15px var(--primary);
-}
-
-.phase-line {
-    width: 2px;
-    background: var(--border);
-    flex-grow: 1;
-    margin-top: 10px;
-}
-
+/* Mastery Cards */
 .phase-content-card {
     background: var(--card-bg);
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 2rem;
+    border-radius: 20px;
+    padding: 2.5rem;
     flex-grow: 1;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-    transition: all 0.3s ease;
-}
-
-.phase-content-card:hover {
-    border-color: var(--primary);
-    background: rgba(255,255,255,0.05);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    margin-bottom: 2rem;
 }
 
 .phase-title {
     font-family: 'Outfit', sans-serif;
-    font-size: 1.4rem;
-    margin-top: 0;
+    font-size: 1.6rem;
     color: var(--accent-blue);
-    letter-spacing: -0.01em;
+    margin-bottom: 2rem;
 }
 
-/* Resource Pills */
-.resource-row { display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
-.resource-pill {
-    padding: 0.6rem 1.2rem;
-    border-radius: 50px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    border: 1px solid transparent;
+/* Resource Grid */
+.resource-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
-.watch-pill { background: rgba(239, 68, 68, 0.1); border-color: #ef4444; color: #fca5a5; }
-.study-pill { background: rgba(59, 130, 246, 0.1); border-color: #3b82f6; color: #93c5fd; }
 
-/* Project Box */
-.project-box {
-    margin-top: 2rem;
+.mastery-item {
+    display: flex;
+    gap: 1rem;
+    background: rgba(255,255,255,0.02);
+    padding: 1.2rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.m-icon { font-size: 1.5rem; }
+.m-label { font-size: 0.65rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; margin-bottom: 0.3rem;}
+.m-link { font-size: 0.9rem; color: #fff; line-height: 1.4; }
+
+/* AI Power-Up Box */
+.ai-burst-box {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, transparent 100%);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: 16px;
     padding: 1.5rem;
+    display: flex;
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.ai-icon { font-size: 2rem; }
+.ai-label { font-size: 0.7rem; font-weight: 800; color: var(--ai-purple); text-transform: uppercase; margin-bottom: 0.5rem; }
+.ai-desc { font-size: 1rem; color: #e9d5ff; line-height: 1.5; }
+
+/* Build Box */
+.build-track {
     background: rgba(16, 185, 129, 0.05);
     border: 1px solid rgba(16, 185, 129, 0.2);
-    border-left: 4px solid var(--accent-green);
     border-radius: 12px;
+    padding: 1.5rem;
 }
-.project-label { font-size: 0.7rem; font-weight: 800; color: var(--accent-green); letter-spacing: 0.15em; text-transform: uppercase; }
-.project-desc { margin-top: 0.8rem; font-size: 1rem; line-height: 1.6; color: #cbd5e1; }
+.build-label { font-size: 0.7rem; font-weight: 800; color: var(--accent-green); text-transform: uppercase; margin-bottom: 0.5rem; }
+.build-text { font-size: 1rem; color: #d1fae5; line-height: 1.5; }
 
-/* Locked Experience */
-.locked-box {
-    background: rgba(10, 10, 34, 0.8);
-    border: 2px dashed var(--primary);
-    padding: 4rem 2rem;
-    text-align: center;
-    border-radius: 20px;
+/* Mastery Progress */
+.stProgress > div > div > div {
+    background-image: linear-gradient(to right, var(--primary), var(--ai-purple)) !important;
 }
-
-/* Hero Branding */
-.hero-section { text-align: center; padding: 5rem 2rem; }
-.hero-section h1 { font-size: 3.5rem !important; font-family: 'Outfit', sans-serif; font-weight: 800 !important; }
-.hero-btn { 
-    background: var(--primary); color: white; border: none; padding: 1rem 3rem; 
-    border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 1.1rem;
-    transition: transform 0.2s;
-}
-.hero-btn:hover { transform: scale(1.05); background: var(--primary-bright); }

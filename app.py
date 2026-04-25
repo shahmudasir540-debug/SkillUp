@@ -54,146 +54,162 @@ if "is_paid" not in st.session_state: st.session_state.is_paid = False
 if "current_step" not in st.session_state: st.session_state.current_step = "onboarding"
 
 # --- Visual Header ---
-st.markdown("""<div class="app-header"><h1 class="app-title">Skill<span class="title-accent">Up</span></h1><p class="app-subtitle">The Final Career Navigation System</p></div>""", unsafe_allow_html=True)
+st.markdown("""<div class="app-header"><h1 class="app-title">Skill<span class="title-accent">Up</span></h1><p class="app-subtitle">The AI-Augmented Career Navigator</p></div>""", unsafe_allow_html=True)
 
-# --- Role Library (Massive Expansion) ---
-ROLE_LIBRARY = [
-    "--- BPO & BPS ---",
-    "Customer Support Associate (Domestic)", "Customer Support Associate (International)", "Voice Process Executive", "Non-Voice / Backoffice Specialist",
-    "Customer Success Manager", "Technical Support Engineer", "Operations Team Leader", "Operations Manager", "Senior Operations Manager",
-    "Quality Analyst (QA)", "Quality Manager", "Trainer (Process/Soft Skills)", "Training Manager",
-    "Workforce Management (WFM) Analyst", "WFM Manager", "MIS Executive", "MIS Manager", "RTA (Real Time Analyst)",
-    "Director of Operations", "VP Operations",
-    "--- IT, DATA & DEV ---",
-    "Data Analyst", "Senior Data Analyst", "Data Scientist", "Data Engineer", "AI/ML Engineer", "Business Intelligence (BI) Developer",
-    "Backend Developer", "Frontend Developer", "Full Stack Developer", "Mobile App Developer", "DevOps Engineer", "Cloud Solutions Architect",
-    "Cybersecurity Specialist", "IT Support Specialist", "System Administrator", "Database Administrator",
-    "--- SALES & MARKETING ---",
-    "Business Development Associate", "Business Development Manager", "Sales Executive", "Corporate Sales Head",
-    "Performance Marketing Specialist", "Digital Marketing Manager", "SEO/SEM Specialist", "Content Strategist", "Social Media Manager",
-    "Product Marketing Manager", "Ad Operations Specialist", "Campaign Manager",
-    "--- EDTECH & DESIGN ---",
-    "Instructional Designer", "Curriculum Developer", "Academic Consultant", "Edtech Product Manager", "Learning Experience Designer",
-    "UI/UX Designer", "Product Designer", "Graphic Designer", "Video Editor",
-    "--- MGMT & OTHER ---",
-    "Project Manager", "Program Manager", "Product Manager", "HR Generalist", "Recruitment Specialist", "Financial Analyst", "Other"
-]
-
-# --- Rendering ---
-def render_clean_phase(phase_text, number):
+# ============================================================
+# RENDERING ENGINE: PREMIUM MASTERY CARDS
+# ============================================================
+def render_mastery_phase(phase_text, number):
     try:
-        title_match = re.search(r"Phase \d+: (.*)", phase_text)
-        title = title_match.group(1) if title_match else f"Mastery Phase {number}"
-        clean_text = phase_text.replace("**", "").replace("*", "")
-        watch = re.search(r"Watch: (.*)", clean_text)
-        study = re.search(r"Study: (.*)", clean_text)
-        build = re.search(r"Build: (.*)", clean_text)
-        st.markdown(f"""<div class="phase-container"><div class="phase-sidebar"><div class="phase-badge">{number}</div><div class="phase-line"></div></div><div class="phase-content-card"><h3 class="phase-title">{title.strip()}</h3><div class="resource-row"><div class="resource-pill watch-pill">📺 Watch: {watch.group(1).strip() if watch else "Curated Playlist"}</div><div class="resource-pill study-pill">🎓 Study: {study.group(1).strip() if study else "Mastery Guide"}</div></div><div class="project-box"><div class="project-label">🛠️ CAPSTONE PROJECT</div><p class="project-desc">{build.group(1).strip() if build else "Portfolio Application"}</p></div></div></div>""", unsafe_allow_html=True)
-    except: st.markdown(f"<div class='phase-card'>{phase_text}</div>", unsafe_allow_html=True)
+        # Improved Extraction Logic for High Value
+        title = re.search(r"Phase \d+: (.*)", phase_text).group(1).strip()
+        
+        # Helper to extract and clean content
+        def get_item(pattern, text):
+            match = re.search(pattern, text, re.IGNORECASE)
+            return match.group(1).strip() if match else "Access in Pro Profile"
 
+        watch = get_item(r"Watch: (.*)", phase_text)
+        study = get_item(r"Study: (.*)", phase_text)
+        ai_tool = get_item(r"AI Advantage: (.*)", phase_text)
+        build = get_item(r"Build: (.*)", phase_text)
+
+        st.markdown(f"""
+        <div class="phase-container">
+            <div class="phase-sidebar">
+                <div class="phase-badge">{number}</div>
+                <div class="phase-line"></div>
+            </div>
+            <div class="phase-content-card">
+                <h3 class="phase-title">{title}</h3>
+                
+                <div class="resource-grid">
+                    <div class="mastery-item">
+                        <span class="m-icon">📺</span>
+                        <div class="m-info">
+                            <div class="m-label">VIDEO PATHWAY</div>
+                            <div class="m-link">{watch}</div>
+                        </div>
+                    </div>
+                    <div class="mastery-item">
+                        <span class="m-icon">🎓</span>
+                        <div class="m-info">
+                            <div class="m-label">PROFESSIONAL STUDY</div>
+                            <div class="m-link">{study}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-burst-box">
+                    <div class="ai-icon">🤖</div>
+                    <div class="ai-content">
+                        <div class="ai-label">AI UPSKILLING POWER-UP</div>
+                        <p class="ai-desc">{ai_tool}</p>
+                    </div>
+                </div>
+
+                <div class="build-track">
+                    <div class="build-label">🛠️ PORTFOLIO CAPSTONE</div>
+                    <p class="build-text">{build}</p>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    except Exception as e:
+        st.markdown(f"<div class='phase-card'>{phase_text}</div>", unsafe_allow_html=True)
+
+# ============================================================
+# CORE APP FLOW
+# ============================================================
 if st.session_state.current_step == "onboarding":
-    st.markdown("""<div class="hero-section"><h1>Your Personalized 6-Month Escape Plan</h1><p>SkillUp builds an expert-curated upskilling roadmap to get you ready for your next promotion or career switch. Stop searching, start mastering.</p></div>""", unsafe_allow_html=True)
-    col_c1, col_c2, col_c3 = st.columns([1,2,1])
-    with col_c2:
-        if st.button("🚀 Begin My Transformation", use_container_width=True, type="primary"):
+    st.markdown("""<div class="hero-section"><h1>The Ultimate AI-Powered Escape Plan</h1><p>SkillUp doesn't just roadmap your skills; it integrates the <b>latest AI tools</b> into your workflow so you stay ahead of the curve. Get an expert-curated curriculum worth ₹2999+ for just ₹299.</p></div>""", unsafe_allow_html=True)
+    c1, c2, c3 = st.columns([1,2,1])
+    with c2:
+        if st.button("🚀 Begin My AI-Powered Transformation", use_container_width=True, type="primary"):
             st.session_state.current_step = "selection"; st.rerun()
 
 elif st.session_state.current_step == "selection":
-    st.markdown("<h2 style='text-align:center;'>📄 Set Your Destination</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center;'>📄 Profile Intelligence Phase</h2>", unsafe_allow_html=True)
     with st.container(border=True):
-        c1, c2 = st.columns(2)
-        with c1:
-            st.session_state.role = st.selectbox("Search & Select Your Dream Role", options=[""] + ROLE_LIBRARY)
-            if st.session_state.role == "Other": st.session_state.role = st.text_input("Enter Custom Role")
-            st.session_state.goal = st.text_input("What is your Immediate Goal?", placeholder="e.g. Move from Domestic to International BPO")
-        with c2:
-            st.caption("Upload your current resume/profile detail")
-            f = st.file_uploader("Upload Profile (PDF/JSON)")
-            if f:
-                with st.spinner("Analyzing..."):
-                    if f.type == "application/pdf":
+        col1, col2 = st.columns(2)
+        with col1:
+            st.session_state.role = st.selectbox("Define Your Target Path", ["", "Data Analyst", "Project Manager", "Operations Leader", "BPO Manager", "WFM Strategist", "Quality Lead", "Other"])
+            st.session_state.goal = st.text_input("Career Objective", placeholder="e.g., Transitioning to AI-assisted Project Management")
+        with col2:
+            st.caption("Upload CV to detect your baseline skills.")
+            up_file = st.file_uploader("Upload Profile (PDF/JSON)")
+            if up_file:
+                with st.spinner("Decoding Skills..."):
+                    if up_file.type == "application/pdf":
                         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as t:
-                            t.write(f.read()); tp = t.name
-                        st.session_state.resume_text = parse_resume(tp)
-                        if os.path.exists(tp): os.remove(tp)
-                    else: st.session_state.resume_text = json.dumps(json.load(f))
-                    st.success("✅ Profile Verified")
-                    
-    if st.button("🗺️ Create My Mastery Roadmap", use_container_width=True, type="primary"):
+                            t.write(up_file.read()); temp_p = t.name
+                        st.session_state.resume_text = parse_resume(temp_p)
+                        if os.path.exists(temp_p): os.remove(temp_p)
+                    else: st.session_state.resume_text = json.dumps(json.load(up_file))
+                    st.success("✅ Profile Decoded")
+
+    if st.button("🗺️ Architect My Mastery Roadmap", use_container_width=True, type="primary"):
         if st.session_state.resume_text and st.session_state.role:
-            with st.spinner("Curating Your Path (searching for available AI engine)..."):
+            with st.spinner("Curating Your Path (AI-Augmented)..."):
                 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
                 
-                # High-Velocity Fallback System
-                models_to_try = [
-                    "gemini-1.5-flash", 
-                    "gemini-1.5-flash-8b", 
-                    "gemini-2.0-flash-exp", 
-                    "gemini-1.0-pro",
-                    "gemini-1.5-pro"
-                ]
+                # Model Fallback System
+                models_to_try = ["gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-2.0-flash-exp", "gemini-1.0-pro"]
                 success = False
-                for model_name in models_to_try:
+                for m_name in models_to_try:
                     try:
-                        m = genai.GenerativeModel(model_name)
+                        m = genai.GenerativeModel(m_name)
                         p = (f"User Resume: {st.session_state.resume_text[:1500]}\nTarget: {st.session_state.role}\n"
-                             "Task: Create a 6-phase learning roadmap. \n"
-                             "Format strictly per phase: Phase X: [Name]\nWatch: [Resource Name/Link]\nStudy: [Course/Guide]\nBuild: [Project Description]\n"
-                             "DO NOT use markdown bolding (**) in the content parts. Keep it plain text for parsing.")
+                             "Task: Create a highly valuable 6-phase learning roadmap. \n"
+                             "FOR EACH PHASE, PROVIDE:\n"
+                             "Phase X: [Name]\n"
+                             "Watch: [ONE SPECIFIC CLICKABLE LINK TO YOUTUBE PLAYLIST]\n"
+                             "Study: [ONE CLICKABLE LINK TO OFFICIAL DOC OR COURSERA COURSE]\n"
+                             "AI Advantage: [SPECIFIC AI TOOLS AND WORKFLOWS THE USER MUST LEARN FOR THIS ROLE]\n"
+                             "Build: [STEP-BY-STEP PROJECT BLUEPRINT]\n\n"
+                             "MANDATORY: NO MARKDOWN BOLDING (**) IN CONTENT. PROVIDE REAL LINKS.")
                         st.session_state.roadmap = m.generate_content(p).text
-                        success = True
-                        break
-                    except Exception as e:
-                        continue
+                        success = True; break
+                    except: continue
                 
                 if not success:
-                    st.info("💡 API Quota reached. Entering 'Demo Mode' to allow UI testing.")
+                    st.info("💡 Entering High-Value Demo Mode (API Quota Hit)")
                     st.session_state.roadmap = """
-Phase 1: Foundation & Data Sense
-Watch: https://www.youtube.com/results?search_query=data+analyst+basics
-Study: Google Data Analytics Certification - Course 1
-Build: Analyze a public kaggle dataset using Excel & basic SQL.
+Phase 1: AI-Augmented Foundations
+Watch: https://www.youtube.com/results?search_query=ai+fundamentals+for+work
+Study: Coursera - Generative AI for Everyone
+AI Advantage: Master ChatGPT for drafting and Claude for data summarization.
+Build: Automate a weekly reporting task using AI and Python.
 
-Phase 2: Technical Deep Dive - SQL & Python
-Watch: https://www.youtube.com/results?search_query=sql+for+data+analytics
-Study: W3Schools SQL Guide & Python for Data Science
-Build: Create a relational database for a sample BPO workflow.
-
-Phase 3: Visual Storytelling
-Watch: https://www.youtube.com/results?search_query=tableau+masterclass
-Study: Tableau/PowerBI Official Desktop Guide
-Build: Create an executive dashboard for BPO performance metrics.
-
-## RESOURCE BIBLE
-YouTube: https://youtube.com/c/freecodecamp
-Courses: https://coursera.org
-Docs: https://sqlzoo.net
+Phase 2: Technical Mastery & AI Integration
+Watch: https://www.youtube.com/results?search_query=excel+plus+ai+tutorial
+Study: Microsoft Learn - AI Builder
+AI Advantage: Learn to use Github Copilot and AI-driven data cleaners.
+Build: Create a predictive seat-occupancy model for BPO operations.
 """
-                    st.session_state.current_step = "journey"; st.rerun()
-                else:
-                    st.session_state.current_step = "journey"; st.rerun()
+                st.session_state.current_step = "journey"; st.rerun()
 
 elif st.session_state.current_step == "journey":
-    t1, t2 = st.tabs(["🗺️ Your Roadmap", "🔬 Deep Analysis"])
-    with t1:
+    tab_r, tab_a = st.tabs(["🗺️ Mastery Journey", "🔬 Skills Matrix"])
+    with tab_r:
         if st.session_state.roadmap:
             parts = re.split(r"Phase \d+:", st.session_state.roadmap); total = len(parts)-1
             if "completed_phases" not in st.session_state: st.session_state.completed_phases = {}
             done = sum(1 for v in st.session_state.completed_phases.values() if v)
             prog = (done / total) if total > 0 else 0
-            st.markdown(f"### 📈 Your Mastery: {int(prog * 100)}%"); st.progress(prog); st.markdown("---")
+            st.markdown(f"### 📈 Your Career Mastery: {int(prog * 100)}%"); st.progress(prog); st.markdown("---")
+            
             show = total if st.session_state.is_paid else 1
             for i, p_text in enumerate(parts[1:show+1]):
-                render_clean_phase(p_text, i+1)
-                cb_key = f"pc_{i+1}"
-                st.session_state.completed_phases[cb_key] = st.checkbox(f"✅ Mark Phase {i+1} as Done", key=cb_key)
+                render_mastery_phase(p_text, i+1)
+                st.session_state.completed_phases[f"pc_{i+1}"] = st.checkbox(f"✅ Mark Phase {i+1} as Mastered", key=f"pc_{i+1}")
+            
             if not st.session_state.is_paid:
-                st.markdown("<div class='locked-box'><h3>🔒 Access the Full 6-Month Plan</h3><p>Unlock all phases and the complete Resource Bible for ₹299.</p></div>", unsafe_allow_html=True)
-                if st.button("💰 Upgrade to Pro", use_container_width=True, type="primary"):
+                st.markdown("<div class='locked-box'><h3>🔒 Unlock Your AI-Augmented Future</h3><p>Unlock the remaining phases, AI toolkits, and the full Resource Bible.</p></div>", unsafe_allow_html=True)
+                if st.button("Unlock Pro Mastery (₹299)", use_container_width=True, type="primary"):
                     st.session_state.is_paid = True; st.balloons(); st.rerun()
             else:
-                st.success("💎 Pro Membership Active")
-                if st.button("📥 Download My PDF Bible", use_container_width=True): st.info("Generating...")
+                st.button("📥 Download My Professional Mastery Bible")
 
-if st.button("🔄 Reset & Start New", use_container_width=True):
-    st.session_state.current_step = "onboarding"; st.session_state.roadmap = ""; st.session_state.completed_phases = {}; st.rerun()
+if st.button("🔄 Start New Path", use_container_width=True):
+    st.session_state.current_step = "onboarding"; st.session_state.roadmap = ""; st.rerun()
